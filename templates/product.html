@@ -30,6 +30,7 @@
                 <th scope="col">Product ID</th>
                 <th scope="col">Product Name</th>
                 <th scope="col">Quantity</th>
+                <th scope="col">Unallocated Quantity</th>
             </thead>
             <tbody>
                 {% for product in products %}
@@ -37,6 +38,7 @@
                         <td>{{ product.id }}</td>
                         <td>{{ product.product_name }}</td>
                         <td>{{ product.product_qty }}</td>
+                        <td>{{ product.product_qty_unallocated }}</td>
                         <td>
                         </td>
                         <td>

@@ -1,1 +1,141 @@
-movements page
+{% extends 'base.html' %}
+
+{% block title %} Product Movements {% endblock %}
+
+{% block body %}
+    <div style="display: flex;justify-content: space-between;align-items: center">
+        <h1>All Movements</h1>
+        <button class="btn btn-primary" data-toggle="modal" data-target="#add_movement"> + New Movement</button>
+        <div id="add_movement" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="trans_message"
+             aria-hidden="true">
+            <form action="{{ url_for('movement') }}" method="POST" class="base_form">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <h2 style="margin-left: 15px; margin-top: 10px">Add New Movement</h2>
+                        <div class="modal-body">
+                            <input style="width: 100%; border: solid 1px; border-radius: 5px" name="product_name"
+                                   id="product_name" list="products" placeholder="Product Name" class="form-control"
+                                   autocomplete="off" required autofocus>
+                            <datalist id="products">
+                                {% for product in products %}
+                                    <option value="{{ product.product_name }}" id="product_{{ product.id }}">
+                                {% endfor %}
+                            </datalist>
+                        </div>
+                        <div class="modal-body"><input style="width: 100%; border: solid 1px; border-radius: 5px"
+                                                       name="from_location" id="from-location-name" list="locations"
+                                                       placeholder="From Location" class="form-control"
+                                                       autocomplete="off" autofocus></div>
+                        <div class="modal-body"><input style="width: 100%; border: solid 1px; border-radius: 5px"
+                                                       name="to_location" id="to-location-name" list="locations"
+                                                       placeholder="To Location" class="form-control" autocomplete="off"
+                                                       autofocus></div>
+                        <datalist id="locations">
+                            {% for location in locations %}
+                                <option value="{{ location.warehouse_location }}" id="product_{{ location.id }}">
+                            {% endfor %}
+                        </datalist>
+                        <div class="modal-body">
+                            <input style="width: 100%; border: solid 1px; border-radius: 5px" name="product_quantity"
+                                   placeholder=" Enter Product Quantity" id="product_quantity" type="number" required>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Add Movement</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    {% if movements %}
+        <table class="table">
+            <thead>
+            <th scope="col">ID</th>
+            <th scope="col">Product</th>
+            <th scope="col">From</th>
+            <th scope="col">To</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">Date</th>
+            </thead>
+            <tbody>
+            {% for movement in movements %}
+                <tr>
+                    <td>{{ movement.id }}</td>
+                    <td>{{ movement.product_name }}</td>
+                    <td>{{ movement.from_location }}</td>
+                    <td>{{ movement.to_location }}</td>
+                    <td>{{ movement.product_qty }}</td>
+                    <td>{{ movement.timestamp.date() }}</td>
+                    <td>
+                    </td>
+                    <td>
+                        <button style="width: 100%" name="button" type="button" class="btn btn-success" value="edit"
+                                data-toggle="modal" data-target="#edit_{{ movement.id }}">Edit
+                        </button>
+                        <br>
+                        <div id="edit_{{ movement.id }}" class="modal fade" tabindex="-1" role="dialog"
+                             aria-labelledby="trans_message" aria-hidden="true">
+                            <form action="{{ url_for('movement') }}" method="POST" class="base_form">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <h2 style="margin-left: 15px; margin-top: 10px">Edit movement</h2>
+
+
+                                        <div class="modal-body">
+                                            <input style="width: 100%; border: solid 1px; border-radius: 5px"
+                                                   name="product_name"
+                                                   id="product_name" value="{{ movement.product_name }}" list="products" placeholder="Product Name"
+                                                   class="form-control"
+                                                   autocomplete="off" required autofocus>
+                                            <datalist id="products">
+                                                {% for product in products %}
+                                                    <option value="{{ product.product_name }}"
+                                                            id="product_{{ product.id }}">
+                                                {% endfor %}
+                                            </datalist>
+                                        </div>
+                                        <div class="modal-body"><input
+                                                style="width: 100%; border: solid 1px; border-radius: 5px"
+                                                name="from_location" id="from-location-name" list="locations"
+                                                placeholder="From Location" value="{{ movement.from_location }}" class="form-control"
+                                                autocomplete="off" autofocus></div>
+                                        <div class="modal-body"><input
+                                                style="width: 100%; border: solid 1px; border-radius: 5px"
+                                                name="to_location" id="to-location-name" list="locations"
+                                                placeholder="To Location" value="{{ movement.to_location }}" class="form-control" autocomplete="off"
+                                                autofocus></div>
+                                        <datalist id="locations">
+                                            {% for location in locations %}
+                                                <option value="{{ location.warehouse_location }}"
+                                                        id="product_{{ location.id }}">
+                                            {% endfor %}
+                                        </datalist>
+                                        <div class="modal-body">
+                                            <input style="width: 100%; border: solid 1px; border-radius: 5px"
+                                                   name="product_quantity" placeholder=" Enter Product Quantity"
+                                                   id="product_quantity" value="{{ movement.product_qty }}" type="number" required>
+                                        </div>
+                                        <div class="modal-footer">
+                                             <input name="movement_id" value="{{ movement.id }}" hidden
+                                                   aria-hidden="true">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close
+                                            </button>
+                                            <button type="submit" class="btn btn-primary">Save changes</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    {% else %}
+        <h3>No Movements Yet. Add now.</h3>
+    {% endif %}
+{% endblock %}
