@@ -1,23 +1,25 @@
-{% extends 'base.html' %}
-{% set active_page = "home" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Report Summary</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+</head>
+<body>
 
-{% block title %} Index {% endblock %}
-
-{% block body %}
     <h1 align="center">Product Balance Summary</h1>
 
     <div class="form-horizontal" title="Summary">
-        {% if summary_data == None or summary_data|length == 0 %}
-            <h3 align="center" class="font-weight-light">Summary not available yet</h3>
-        {% else %}
-            <button style="margin-bottom: 10px;float: right" class="btn btn-primary"><a style="color: #ffffff" href="{{ url_for('generate_report') }}" target="_blank">Download Report</a></button>
+            <div style="display: flex;justify-content: space-between;align-items: center">
+            </div>
             <div>
                 <table class="table">
                     <thead>
                     <tr>
                         <th scope="col">Product</th>
-                        <th scope="col">Location</th>
-                        <th scope="col">Quantity(Available)</th>
+                        <th scope="col">Warehouse</th>
+                        <th scope="col">Quantity</th>
                     </tr>
                     </thead>
                     <thead>
@@ -31,6 +33,8 @@
                     </thead>
                 </table>
             </div>
-        {% endif %}
     </div>
-{% endblock %}
+
+
+</body>
+</html>
