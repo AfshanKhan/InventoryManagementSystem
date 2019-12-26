@@ -3,7 +3,6 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from sqlalchemy import func
 from sqlalchemy.sql import label
-import json
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///inventory.db'
@@ -56,7 +55,8 @@ class ProductLocationAvailabilityMapping(db.Model):
 
 @app.route('/')
 def index():
-    mapping_data = ProductLocationAvailabilityMapping.query.order_by(ProductLocationAvailabilityMapping.product_name).all()
+    mapping_data = ProductLocationAvailabilityMapping.query.order_by(
+        ProductLocationAvailabilityMapping.product_name).all()
     print(mapping_data)
 
     return render_template('index.html', summary_data=mapping_data)
@@ -82,7 +82,10 @@ def product():
             return redirect(url_for('product'))
 
     products = Product.query.all()
-    quantity = ProductLocationAvailabilityMapping.query.with_entities(ProductLocationAvailabilityMapping.product_name, label('sum', func.sum(ProductLocationAvailabilityMapping.product_qty_balance))).group_by(ProductLocationAvailabilityMapping.product_name).all()
+    quantity = ProductLocationAvailabilityMapping.query.with_entities(ProductLocationAvailabilityMapping.product_name,
+                                                                      label('sum', func.sum(
+                                                                          ProductLocationAvailabilityMapping.product_qty_balance))).group_by(
+        ProductLocationAvailabilityMapping.product_name).all()
     return render_template('product.html', products=products, quantity=quantity)
 
 
@@ -104,6 +107,7 @@ def location():
             return redirect(url_for('location'))
 
     locations = Location.query.all()
+    string = ''
     for loc in locations:
         product_list = []
         products = ProductLocationAvailabilityMapping.query.filter_by(location_name=loc.warehouse_location).all()
@@ -112,7 +116,7 @@ def location():
                 product_list.append(product.product_name)
 
         if product_list:
-            string = ''
+
             count = 1
             for product in product_list:
                 string += product
@@ -131,7 +135,6 @@ def movement():
         allow_entry = True
         product_name = None
         product_quantity = None
-        mapped_record_location = None
 
         from_location = request.form['from_location']
 
@@ -160,7 +163,8 @@ def movement():
         if from_location == 'Select warehouse':
             pass
         else:
-            mapped_record_location = ProductLocationAvailabilityMapping.query.filter_by(product_name=product_name).filter_by(location_name=from_location).first()
+            mapped_record_location = ProductLocationAvailabilityMapping.query.filter_by(
+                product_name=product_name).filter_by(location_name=from_location).first()
             if mapped_record_location:
                 if int(product_quantity) > mapped_record_location.product_qty_balance:
                     print('Quantity not available')
@@ -201,11 +205,13 @@ def movement():
                 db.session.add(new_movement)
                 db.session.flush()
 
-            from_mapped_records = ProductLocationAvailabilityMapping.query.filter_by(product_name=product_name).filter_by(location_name=from_location).first()
+            from_mapped_records = ProductLocationAvailabilityMapping.query.filter_by(
+                product_name=product_name).filter_by(location_name=from_location).first()
             if from_mapped_records:
                 from_mapped_records.product_qty_balance -= int(product_quantity)
 
-            to_mapped_records = ProductLocationAvailabilityMapping.query.filter_by(product_name=product_name).filter_by(location_name=to_location).first()
+            to_mapped_records = ProductLocationAvailabilityMapping.query.filter_by(product_name=product_name).filter_by(
+                location_name=to_location).first()
             if to_mapped_records:
                 to_mapped_records.product_qty_balance += int(product_quantity)
             else:

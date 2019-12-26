@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% set active_page = "product" %}
 
 {% block title %} Product {% endblock %}
 
@@ -40,9 +41,9 @@
                     <td>
                         {% for data in quantity %}
                             {% if data.product_name == product.product_name %}
-                            {{ data.sum }}
+                                {{ data.sum }}
                             {% endif %}
-                            {% endfor %}
+                        {% endfor %}
                     </td>
                     <td>
                     </td>

@@ -1,15 +1,14 @@
 {% extends 'base.html' %}
+{% set active_page = "home" %}
 
 {% block title %} Index {% endblock %}
 
 {% block body %}
-{#    <div class="container" style="float: contour;" align="center">#}
     <h1 align="center">Summary</h1>
     <div class="form-horizontal" title="Summary">
         {% if summary_data == None or summary_data|length == 0 %}
             <h3 align="center" class="font-weight-light">Summary not available yet</h3>
         {% else %}
-            <!-- Summary needed -->
             <h3 class="font-weight-light">Product Balance Summary</h3>
             <div>
                 <table class="table">
@@ -33,5 +32,4 @@
             </div>
         {% endif %}
     </div>
-{#    </div>#}
 {% endblock %}
