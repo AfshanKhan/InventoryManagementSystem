@@ -1,12 +1,12 @@
 # InventoryManagementSystem
- ###Description
+### Description
  This is inventory management system that is only focused on 'warehouses'. It can track 'products' at various 'warehouses' also the 'quantity' for each products
  
  
-###Assumption
+### Assumption
  Here it is assumed that for a location, the fist entry should have empty 'From', because you cannot send something you don't have.
 
-###Screens
+### Screens
 Empty Overview
 ![Empty Overview](Utils/overview_empty.gif)
 <br>
@@ -31,7 +31,7 @@ Generate PDF of Summary
 ![Generate PDF of Summary](Utils/report.gif)
 
 
-###Dependencies
+### Dependencies
 1. Flask
 2. PDFKIT
 3. WKHTMLTOPDF
