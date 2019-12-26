@@ -1,8 +1,9 @@
-from flask import Flask, render_template, redirect, request, url_for
+from flask import Flask, render_template, redirect, request, url_for, make_response
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from sqlalchemy import func
 from sqlalchemy.sql import label
+import pdfkit
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///inventory.db'
@@ -57,7 +58,6 @@ class ProductLocationAvailabilityMapping(db.Model):
 def index():
     mapping_data = ProductLocationAvailabilityMapping.query.order_by(
         ProductLocationAvailabilityMapping.product_name).all()
-    print(mapping_data)
 
     return render_template('index.html', summary_data=mapping_data)
 
@@ -238,6 +238,19 @@ def movement():
     movements = ProductMovement.query.all()
     print(movements)
     return render_template('movements.html', products=products, locations=locations, movements=movements)
+
+
+@app.route('/get_report')
+def generate_report():
+    mapping_data = ProductLocationAvailabilityMapping.query.order_by(
+        ProductLocationAvailabilityMapping.product_name).all()
+    timestamp = datetime.utcnow()
+    renderer = render_template('pdf.html', summary_data=mapping_data)
+    pdf = pdfkit.from_string(renderer, False)
+    response = make_response(pdf)
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = 'inline; filename=report' + str(timestamp) + '.pdf'
+    return response
 
 
 if __name__ == '__main__':

@@ -1,9 +1,13 @@
-{% extends 'base.html' %}
-{% set active_page = "home" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Report Summary</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+</head>
+<body>
 
-{% block title %} Index {% endblock %}
-
-{% block body %}
     <h1 align="center">Summary</h1>
 
     <div class="form-horizontal" title="Summary">
@@ -12,7 +16,6 @@
         {% else %}
             <div style="display: flex;justify-content: space-between;align-items: center">
             <h3 class="font-weight-light">Product Balance Summary</h3>
-                <button class="btn btn-primary"><a style="color: #ffffff" href="{{ url_for('generate_report') }}" target="_blank">Generate Report PDF</a></button>
             </div>
             <div>
                 <table class="table">
@@ -36,4 +39,7 @@
             </div>
         {% endif %}
     </div>
-{% endblock %}
+
+
+</body>
+</html>
