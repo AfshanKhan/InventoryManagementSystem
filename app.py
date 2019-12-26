@@ -56,13 +56,10 @@ class ProductLocationAvailabilityMapping(db.Model):
 
 @app.route('/')
 def index():
-    product_movement_data = ProductMovement.query.group_by(ProductMovement.product_id).all()
-    if product_movement_data:
-        for data in product_movement_data:
-            pass
-            # product = Product.query.filter_by(Product.id == data.product_id)
+    mapping_data = ProductLocationAvailabilityMapping.query.order_by(ProductLocationAvailabilityMapping.product_name).all()
+    print(mapping_data)
 
-    return render_template('index.html')
+    return render_template('index.html', summary_data=mapping_data)
 
 
 @app.route('/products', methods=['GET', 'POST'])

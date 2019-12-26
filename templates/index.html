@@ -3,86 +3,29 @@
 {% block title %} Index {% endblock %}
 
 {% block body %}
-    <h3 align="center">Description</h3>
-    <div style="height: 50%;width: 100%; float: left">
-        {% if warehouses == None or warehouses|length == 0 %}
-            <div style="float: left;width:50%;">
-                <h3 align="center" class="font-weight-light">No Warehouse Data Available Yet</h3>
-            </div>
-        {% else %}
-            <!-- Div to list all warehouses -->
-            <div style="float:left;width:50%">
-                <table class="table">
-                    <thead>
-                    <tr>
-                        <th scope="col">Poduct</th>
-                        <th scope="col">Warehouse</th>
-                        <th scope="col">Quantity</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for warehouse in warehouses %}
-                        <tr>
-                            <td>{{ warehouse[0] }}</td>
-                            <td>{{ warehouse[1] }}</td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        {% endif %}
-        {% if products == None or products|length == 0 %}
-            <div style="float: right;width: 50%;">
-                <h3 align="center" class="font-weight-light">No Product Data Available Yet</h3>
-            </div>
-        {% else %}
-            <!-- Div to list all products -->
-            <div style="float:right;width:50%;">
-                <table class="table">
-                    <thead>
-                    <tr>
-                        <th scope="col">prod_id</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Count</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for product in products %}
-                        <tr>
-                            <td>{{ product[0] }}</td>
-                            <td>{{ product[1] }}</td>
-                            <td>{{ product[2] }}</td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        {% endif %}
-    </div>
-    </div>
-
-    <div class="container" style="float: contour;" align="center">
-    <h3 align="center">Summary</h3>
+{#    <div class="container" style="float: contour;" align="center">#}
+    <h1 align="center">Summary</h1>
     <div class="form-horizontal" title="Summary">
-        {% if database == None or database|length == 0 %}
+        {% if summary_data == None or summary_data|length == 0 %}
             <h3 align="center" class="font-weight-light">Summary not available yet</h3>
         {% else %}
             <!-- Summary needed -->
+            <h3 class="font-weight-light">Product Balance Summary</h3>
             <div>
                 <table class="table">
                     <thead>
                     <tr>
                         <th scope="col">Product</th>
-                        <th scope="col">Un-Allocated</th>
-                        <th scope="col">Total Count</th>
+                        <th scope="col">Warehouse</th>
+                        <th scope="col">Quantity</th>
                     </tr>
                     </thead>
                     <thead>
-                    {% for data in database %}
+                    {% for data in summary_data %}
                         <tr>
-                            <td>{{ data[0] }}</td>
-                            <td>{{ data[1] }}</td>
-                            <td>{{ data[2] }}</td>
+                            <td>{{ data.product_name }}</td>
+                            <td>{{ data.location_name }}</td>
+                            <td>{{ data.product_qty_balance }}</td>
                         </tr>
                     {% endfor %}
                     </thead>
@@ -90,4 +33,5 @@
             </div>
         {% endif %}
     </div>
+{#    </div>#}
 {% endblock %}
