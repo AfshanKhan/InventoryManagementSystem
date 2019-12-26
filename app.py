@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, request, url_for, make_response
+from flask import Flask, render_template, redirect, request, url_for, make_response, flash
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from sqlalchemy import func
@@ -6,6 +6,7 @@ from sqlalchemy.sql import label
 import pdfkit
 
 app = Flask(__name__)
+app.secret_key = 'inventory-management-system'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///inventory.db'
 
 db = SQLAlchemy(app)
@@ -70,16 +71,27 @@ def product():
         if 'product_id' in request.form:
             product_id = request.form['product_id']
             exist = Product.query.filter_by(id=product_id).first()
+            old_product = exist.product_name
             exist.product_name = product_name
             exist.updated_at = datetime.utcnow()
-            db.session.commit()
+            mapping_data = ProductLocationAvailabilityMapping.query.filter_by(product_name=old_product).all()
+            if mapping_data:
+                for data in mapping_data:
+                    data.product_name = product_name
+            product_movement_data = ProductMovement.query.filter_by(product_name=old_product).all()
+            if product_movement_data:
+                for product_data in product_movement_data:
+                    product_data.product_name = product_name
+            flash(f'{product_name} edited', 'info')
         else:
             new_product = Product()
             new_product.product_name = product_name
             db.session.add(new_product)
             db.session.flush()
-            db.session.commit()
-            return redirect(url_for('product'))
+            flash(f'{product_name} added', 'info')
+
+        db.session.commit()
+        return redirect(url_for('product'))
 
     products = Product.query.all()
     quantity = ProductLocationAvailabilityMapping.query.with_entities(ProductLocationAvailabilityMapping.product_name,
@@ -96,19 +108,37 @@ def location():
         if 'location_id' in request.form:
             location_id = request.form['location_id']
             exist = Location.query.filter_by(id=location_id).first()
+            old_location = exist.warehouse_location
             exist.warehouse_location = warehouse_location
-            db.session.commit()
+            exist.updated_at = datetime.utcnow()
+            mapping_data = ProductLocationAvailabilityMapping.query.filter_by(location_name=old_location).all()
+            if mapping_data:
+                for data in mapping_data:
+                    data.location_name = warehouse_location
+            from_movement_data = ProductMovement.query.filter_by(from_location=old_location).all()
+            if from_movement_data:
+                for from_data in from_movement_data:
+                    from_data.from_location = warehouse_location
+
+            to_movement_data = ProductMovement.query.filter_by(to_location=old_location).all()
+            if to_movement_data:
+                for to_data in to_movement_data:
+                    to_data.to_location = warehouse_location
+
+            flash(f'{warehouse_location} edited', 'info')
         else:
             warehouse = Location()
             warehouse.warehouse_location = warehouse_location
             db.session.add(warehouse)
             db.session.flush()
-            db.session.commit()
-            return redirect(url_for('location'))
+            flash(f'{warehouse_location} added', 'info')
+        db.session.commit()
+        return redirect(url_for('location'))
 
     locations = Location.query.all()
-    string = ''
+
     for loc in locations:
+        string = ''
         product_list = []
         products = ProductLocationAvailabilityMapping.query.filter_by(location_name=loc.warehouse_location).all()
         if products:
@@ -125,7 +155,6 @@ def location():
                 count += 1
         setattr(loc, 'product_list', string)
 
-        print(products)
     return render_template('location.html', locations=locations)
 
 
@@ -143,20 +172,20 @@ def movement():
         if from_location or to_location:
             if from_location == to_location:
                 allow_entry = False
-                print('From and To location cannot be same')
+                flash('From and To location cannot be same', 'warning')
         else:
-            print('From and To location are not selected')
+            flash('From and To location are not selected', 'warning')
             allow_entry = False
 
         if int(request.form['product_quantity']) > 0:
             product_quantity = request.form['product_quantity']
         else:
-            print('Invalid quantity')
+            flash('Invalid quantity', 'warning')
             allow_entry = False
         if request.form['product_name'] != 'Select product':
             product_name = request.form['product_name']
         else:
-            print('no product selected')
+            flash('No product selected', 'warning')
             allow_entry = False
 
         product_details = Product.query.filter_by(product_name=product_name).first()
@@ -167,10 +196,10 @@ def movement():
                 product_name=product_name).filter_by(location_name=from_location).first()
             if mapped_record_location:
                 if int(product_quantity) > mapped_record_location.product_qty_balance:
-                    print('Quantity not available')
+                    flash('Quantity selected is not available', 'warning')
                     allow_entry = False
             else:
-                print('From entry not found in mapping')
+                flash('Stock for selected product is not available at selected location', 'info')
                 allow_entry = False
 
         if allow_entry:
@@ -189,6 +218,7 @@ def movement():
                     old_movement.to_location = '---'
                 old_movement.timestamp = datetime.utcnow()
                 old_movement.product_qty = product_quantity
+                flash('Product movement edited', 'info')
             else:
                 new_movement = ProductMovement()
                 new_movement.product_id = product_details.id
@@ -204,6 +234,7 @@ def movement():
                 new_movement.product_qty = product_quantity
                 db.session.add(new_movement)
                 db.session.flush()
+                flash('Product movement added', 'info')
 
             from_mapped_records = ProductLocationAvailabilityMapping.query.filter_by(
                 product_name=product_name).filter_by(location_name=from_location).first()
@@ -231,12 +262,9 @@ def movement():
     select_product = {'id': 0, 'product_name': 'Select product'}
     products.insert(0, select_product)
     locations = Location.query.all()
-    print(locations)
     select_warehouse = {'id': 0, 'warehouse_location': 'Select warehouse'}
     locations.insert(0, select_warehouse)
-    print(locations)
     movements = ProductMovement.query.all()
-    print(movements)
     return render_template('movements.html', products=products, locations=locations, movements=movements)
 
 
@@ -249,7 +277,7 @@ def generate_report():
     pdf = pdfkit.from_string(renderer, False)
     response = make_response(pdf)
     response.headers['Content-Type'] = 'application/pdf'
-    response.headers['Content-Disposition'] = 'inline; filename=report' + str(timestamp) + '.pdf'
+    response.headers['Content-Disposition'] = 'attachment; filename=report' + str(timestamp) + '.pdf'
     return response
 
 

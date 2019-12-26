@@ -17,7 +17,7 @@
                                 style="width: 100%; border: solid 1px; border-radius: 5px" id="product_name"
                                 name="product_name" placeholder=" Enter Product Name" required></div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                             <button type="submit" class="btn btn-primary">Add Product</button>
                         </div>
                     </div>
@@ -26,6 +26,18 @@
         </div>
     </div>
     {% if products %}
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-primary alert-dismissible fade show" role="alert">
+                <span>{{ message }}</span>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
         <table class="table">
             <thead>
             <th scope="col">Product ID</th>
@@ -49,7 +61,7 @@
                     </td>
                     <td>
                         <button style="width: 100%" name="button" type="button" class="btn btn-success" value="edit"
-                                data-toggle="modal" data-target="#edit_{{ product.id }}">Edit
+                                data-toggle="modal" data-target="#edit_{{ product.id }}">Rename
                         </button>
                         <br>
                         <div id="edit_{{ product.id }}" class="modal fade" tabindex="-1" role="dialog"
@@ -58,14 +70,14 @@
                             <form action="{{ url_for('product') }}" method="POST" class="base_form">
                                 <div class="modal-dialog modal-dialog-centered" role="document">
                                     <div class="modal-content">
-                                        <h2 style="margin-left: 15px; margin-top: 10px">Edit Product</h2>
+                                        <h2 style="margin-left: 15px; margin-top: 10px">Rename Product</h2>
                                         <div class="modal-body"><label>Product Name</label><input
                                                 style="width: 100%; border: solid 1px; border-radius: 5px"
                                                 name="product_name" value="{{ product.product_name }}" required
                                                 autofocus></div>
                                         <div class="modal-footer">
                                             <input name="product_id" value="{{ product.id }}" hidden aria-hidden="true">
-                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel
                                             </button>
                                             <button type="submit" class="btn btn-primary">Save changes</button>
                                         </div>

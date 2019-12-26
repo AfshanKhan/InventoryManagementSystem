@@ -4,23 +4,20 @@
 {% block title %} Index {% endblock %}
 
 {% block body %}
-    <h1 align="center">Summary</h1>
+    <h1 align="center">Product Balance Summary</h1>
 
     <div class="form-horizontal" title="Summary">
         {% if summary_data == None or summary_data|length == 0 %}
             <h3 align="center" class="font-weight-light">Summary not available yet</h3>
         {% else %}
-            <div style="display: flex;justify-content: space-between;align-items: center">
-            <h3 class="font-weight-light">Product Balance Summary</h3>
-                <button class="btn btn-primary"><a style="color: #ffffff" href="{{ url_for('generate_report') }}" target="_blank">Generate Report PDF</a></button>
-            </div>
+            <button style="margin-bottom: 10px;float: right" class="btn btn-primary"><a style="color: #ffffff" href="{{ url_for('generate_report') }}" target="_blank">Download Report</a></button>
             <div>
                 <table class="table">
                     <thead>
                     <tr>
                         <th scope="col">Product</th>
-                        <th scope="col">Warehouse</th>
-                        <th scope="col">Quantity</th>
+                        <th scope="col">Location</th>
+                        <th scope="col">Quantity(Available)</th>
                     </tr>
                     </thead>
                     <thead>

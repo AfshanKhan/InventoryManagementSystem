@@ -8,14 +8,10 @@
 </head>
 <body>
 
-    <h1 align="center">Summary</h1>
+    <h1 align="center">Product Balance Summary</h1>
 
     <div class="form-horizontal" title="Summary">
-        {% if summary_data == None or summary_data|length == 0 %}
-            <h3 align="center" class="font-weight-light">Summary not available yet</h3>
-        {% else %}
             <div style="display: flex;justify-content: space-between;align-items: center">
-            <h3 class="font-weight-light">Product Balance Summary</h3>
             </div>
             <div>
                 <table class="table">
@@ -37,7 +33,6 @@
                     </thead>
                 </table>
             </div>
-        {% endif %}
     </div>
 
 
