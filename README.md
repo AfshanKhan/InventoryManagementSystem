@@ -8,23 +8,22 @@
 
 ### Screens
 
-Empty Overview
+###### Empty Overview
 ![Empty Overview](Utils/overview_empty.gif)
 
- Final Overview
+###### Final Overview
 ![Overview](Utils/overview.gif)
 
- Add Product
+###### Add Product
 ![Add Product](Utils/add_product.gif)
 
- Add Warehouse
+###### Add Warehouse
 ![Add Location](Utils/add_location.gif)
-<br>
-<br>
- Add Product Movement
+
+###### Add Product Movement
 ![Add Movement](Utils/add_movement.gif)
 
- Generate PDF of Summary
+###### Generate PDF of Summary
 ![Generate PDF of Summary](Utils/report.gif)
 
 
