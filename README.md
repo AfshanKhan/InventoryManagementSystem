@@ -7,27 +7,24 @@
  Here it is assumed that for a location, the fist entry should have empty 'From', because you cannot send something you don't have.
 
 ### Screens
+
 Empty Overview
 ![Empty Overview](Utils/overview_empty.gif)
-<br>
-<br>
-Final Overview
+
+ Final Overview
 ![Overview](Utils/overview.gif)
-<br>
-<br>
-Add Product
+
+ Add Product
 ![Add Product](Utils/add_product.gif)
-<br>
-<br>
-Add Warehouse
+
+ Add Warehouse
 ![Add Location](Utils/add_location.gif)
 <br>
 <br>
-Add Product Movement
+ Add Product Movement
 ![Add Movement](Utils/add_movement.gif)
-<br>
-<br>
-Generate PDF of Summary
+
+ Generate PDF of Summary
 ![Generate PDF of Summary](Utils/report.gif)
 
 
