@@ -6,7 +6,7 @@
 {% block body %}
     <div style="display: flex;justify-content: space-between;align-items: center">
         <h1>All Warehouses</h1>
-        <button class="btn btn-primary" data-toggle="modal" data-target="#add_location"> + New Warehouse</button>
+        <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#add_location"> + New Warehouse</button>
         <div id="add_location" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="trans_message"
              aria-hidden="true">
             <form action="{{ url_for('location') }}" method="POST" class="base_form">
@@ -47,13 +47,13 @@
             <tbody>
             {% for location in locations %}
                 <tr>
-                    <td>{{ location.id }}</td>
-                    <td>{{ location.warehouse_location }}</td>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ location.location_name }}</td>
                     <td>{{ location.product_list }}</td>
                     <td>
                     </td>
                     <td>
-                        <button style="width: 100%" name="button" type="button" class="btn btn-success" value="edit"
+                        <button style="width: 100%" name="button" type="button" class="btn btn-sm btn-success" value="edit"
                                 data-toggle="modal" data-target="#edit_{{ location.id }}">Rename
                         </button>
                         <br>
@@ -65,7 +65,7 @@
                                         <h2 style="margin-left: 15px; margin-top: 10px">Rename Location</h2>
                                         <div class="modal-body"><label>Warehouse Name</label><input
                                                 style="width: 100%; border: solid 1px; border-radius: 5px"
-                                                name="location_name" value="{{ location.warehouse_location }}" required>
+                                                name="location_name" value="{{ location.location_name }}" required>
                                         </div>
                                         <div class="modal-footer">
                                             <input name="location_id" value="{{ location.id }}" hidden

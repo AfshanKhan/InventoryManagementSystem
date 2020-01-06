@@ -6,7 +6,7 @@
 {% block body %}
     <div style="display: flex;justify-content: space-between;align-items: center">
         <h1>All Products</h1>
-        <button class="btn btn-primary" data-toggle="modal" data-target="#add_product"> + New Product</button>
+        <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#add_product"> + New Product</button>
         <div id="add_product" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="trans_message"
              aria-hidden="true">
             <form action="{{ url_for('product') }}" method="POST" class="base_form">
@@ -25,7 +25,7 @@
             </form>
         </div>
     </div>
-    {% if products %}
+    {% if data %}
         {% with messages = get_flashed_messages() %}
         {% if messages %}
             {% for message in messages %}
@@ -45,22 +45,16 @@
             <th scope="col">Quantity</th>
             </thead>
             <tbody>
-            {% for product in products %}
+            {% for product in data %}
                 <tr>
-                    <td>{{ product.id }}</td>
+                    <td>{{ loop.index }}</td>
                     <td>{{ product.product_name }}</td>
 
+                   <td>{{ product.total_quantity }}</td>
+{#                    <td>#}
+{#                    </td>#}
                     <td>
-                        {% for data in quantity %}
-                            {% if data.product_name == product.product_name %}
-                                {{ data.sum }}
-                            {% endif %}
-                        {% endfor %}
-                    </td>
-                    <td>
-                    </td>
-                    <td>
-                        <button style="width: 100%" name="button" type="button" class="btn btn-success" value="edit"
+                        <button style="width: 100%" name="button" type="button" class="btn btn-sm btn-success" value="edit"
                                 data-toggle="modal" data-target="#edit_{{ product.id }}">Rename
                         </button>
                         <br>
@@ -85,6 +79,13 @@
                                 </div>
                             </form>
                         </div>
+                    </td>
+                <td>
+                    <form action="{{ url_for('product') }}" method="POST" class="base_form">
+                        <input name="delete_product_id" value="{{ product.id }}" hidden aria-hidden="true">
+                        <button type="submit" style="width: 100%" class="btn btn-sm btn-danger">Delete</button>
+                    </form>
+                        <br>
                     </td>
                 </tr>
             {% endfor %}
